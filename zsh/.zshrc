@@ -181,3 +181,17 @@ export PATH=/Users/senzenn/.opencode/bin:$PATH
 # >>> Starship prompt initialization >>>
 eval "$(starship init zsh)"
 # <<< Starship prompt initialization <<<
+
+# Set a blazingly fast keyboard repeat rate (from nikolovlazar)
+defaults write NSGlobalDomain KeyRepeat -int 1
+defaults write NSGlobalDomain InitialKeyRepeat -int 15
+defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool false
+
+# Neovim socket for better integration
+export NVIM_LISTEN_ADDRESS=/tmp/nvim-senzenn-$$.sock
+
+# Useful function to kill processes on port 3000
+findandkill() {
+  $(lsof -ti:3000 | xargs kill)
+}
+alias kill_port=findandkill
