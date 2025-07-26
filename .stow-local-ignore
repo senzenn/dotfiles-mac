@@ -1,0 +1,9 @@
+# Ignore git repositories and other unnecessary files
+.git/
+.gitignore
+README.md
+install.sh
+setup.sh
+*.md
+.DS_Store
+temp-* 

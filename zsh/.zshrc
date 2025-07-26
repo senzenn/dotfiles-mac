@@ -177,3 +177,7 @@ fi
 
 # opencode
 export PATH=/Users/senzenn/.opencode/bin:$PATH
+
+# >>> Starship prompt initialization >>>
+eval "$(starship init zsh)"
+# <<< Starship prompt initialization <<<

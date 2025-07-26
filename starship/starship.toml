@@ -1,66 +1,83 @@
-add_newline = false
-# A minimal left prompt
-format = """$directory$character"""
-palette = "catppuccin_mocha"
-# move the rest of the prompt to the right
-right_format = """$all"""
-command_timeout = 1000
+# Starship Prompt Configuration
+# Inspired by modern, minimal, and informative setups
+
+format = "\n$directory$git_branch$git_status$nodejs$python$rust$golang$docker_context$package$cmd_duration$time$line_break$character "
+
+add_newline = true
 
 [character]
-vicmd_symbol = "[N] >>>"
-success_symbol = '[➜](bold green)'
+success_symbol = "[❯](bold green)"
+error_symbol = "[❯](bold red)"
+vimcmd_symbol = "[❮](bold blue)"
 
-[directory.substitutions]
-'~/tests/starship-custom' = 'work-project'
+[directory]
+style = "bold blue"
+truncation_length = 3
+truncation_symbol = "../"
 
 [git_branch]
-format =  '[$symbol$branch(:$remote_branch)]($style)'
+symbol = " "
+style = "bold purple"
 
-[aws]
-format = '[$symbol(profile: "$profile" )(\(region: $region\) )]($style)'
-disabled = false
-style = 'bold blue'
-symbol = " "
+[git_status]
+style = "bold yellow"
+
+[nodejs]
+symbol = " "
+style = "bold green"
+
+[python]
+symbol = "🐍 "
+style = "bold yellow"
+
+[rust]
+symbol = "🦀 "
+style = "bold red"
 
 [golang]
-format = '[ ](bold cyan)'
-
-[kubernetes]
-symbol = '☸ '
-disabled = true
-detect_files = ['Dockerfile']
-format = '[$symbol$context( \($namespace\))]($style) '
-contexts = [
-  { context_pattern = "arn:aws:eks:us-west-2:577926974532:cluster/zd-pvc-omer", style = "green", context_alias = "omerxx", symbol = " " },
-]
+symbol = " "
+style = "bold cyan"
 
 [docker_context]
+symbol = "🐳 "
+style = "bold blue"
+
+[package]
+symbol = "📦 "
+style = "bold purple"
+
+[cmd_duration]
+min_time = 2000
+format = "[⏱ $duration]($style) "
+style = "bold yellow"
+
+[time]
+disabled = false
+format = "[ $time]($style) "
+style = "bold white"
+time_format = "%R"
+
+[username]
+disabled = false
+style_user = "bold yellow"
+style_root = "bold red"
+
+[hostname]
+disabled = false
+style = "bold dimmed blue"
+
+[aws]
 disabled = true
 
-[palettes.catppuccin_mocha]
-rosewater = "#f5e0dc"
-flamingo = "#f2cdcd"
-pink = "#f5c2e7"
-mauve = "#cba6f7"
-red = "#f38ba8"
-maroon = "#eba0ac"
-peach = "#fab387"
-yellow = "#f9e2af"
-green = "#a6e3a1"
-teal = "#94e2d5"
-sky = "#89dceb"
-sapphire = "#74c7ec"
-blue = "#89b4fa"
-lavender = "#b4befe"
-text = "#cdd6f4"
-subtext1 = "#bac2de"
-subtext0 = "#a6adc8"
-overlay2 = "#9399b2"
-overlay1 = "#7f849c"
-overlay0 = "#6c7086"
-surface2 = "#585b70"
-surface1 = "#45475a"
-surface0 = "#313244"
-base = "#1e1e2e"
-mantle = "#181825"
-crust = "#11111b"
+[gcloud]
+disabled = true
+
+[azure]
+disabled = true
+
+[custom.git_user]
+description = "Show git user if set"
+command = "git config user.name 2>/dev/null"
+when = "git rev-parse --is-inside-work-tree 2>/dev/null"
+format = "[$output]($style) "
+style = "bold green"

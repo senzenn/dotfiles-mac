@@ -61,7 +61,7 @@ else
 fi
 
 # 2. Install essential packages
-BREW_PACKAGES=(git zsh neovim tmux ripgrep fd fzf bat exa starship)
+BREW_PACKAGES=(git zsh neovim tmux ripgrep fd fzf bat exa starship stow)
 print_status "Installing essential Homebrew packages..."
 brew install "${BREW_PACKAGES[@]}"
 
@@ -82,36 +82,44 @@ if [[ ! -d "$ZSH_CUSTOM/plugins/zsh-syntax-highlighting" ]]; then
     git clone https://github.com/zsh-users/zsh-syntax-highlighting.git "$ZSH_CUSTOM/plugins/zsh-syntax-highlighting"
 fi
 
-# 5. Symlink configs
-print_status "Symlinking configuration files..."
-# Zsh
-create_symlink "$SCRIPT_DIR/zsh/.zshrc" "$HOME/.zshrc"
-create_symlink "$SCRIPT_DIR/zsh/.zsh_aliases" "$HOME/.zsh_aliases"
-create_symlink "$SCRIPT_DIR/zsh/.zsh_functions" "$HOME/.zsh_functions"
-# Neovim
-create_symlink "$SCRIPT_DIR/nvim/nvim" "$HOME/.config/nvim"
-# Tmux
-create_symlink "$SCRIPT_DIR/tmux/tmux.conf" "$HOME/.tmux.conf"
-# Git
-create_symlink "$SCRIPT_DIR/git/.gitconfig" "$HOME/.gitconfig"
-create_symlink "$SCRIPT_DIR/git/.gitignore_global" "$HOME/.gitignore_global"
-# Other configs
-create_symlink "$SCRIPT_DIR/other/.inputrc" "$HOME/.inputrc"
-# Starship
-create_symlink "$SCRIPT_DIR/starship/starship.toml" "$HOME/.config/starship.toml"
-# Skhd
-create_symlink "$SCRIPT_DIR/skhd/skhdrc" "$HOME/.skhdrc"
-# Wezterm
-create_symlink "$SCRIPT_DIR/wezterm/wezterm.lua" "$HOME/.wezterm.lua"
-# Zellij
-create_symlink "$SCRIPT_DIR/zellij/config.kdl" "$HOME/.config/zellij/config.kdl"
-# Nushell
-create_symlink "$SCRIPT_DIR/nushell/config.nu" "$HOME/.config/nushell/config.nu"
-create_symlink "$SCRIPT_DIR/nushell/env.nu" "$HOME/.config/nushell/env.nu"
-# Karabiner
-create_symlink "$SCRIPT_DIR/karabiner/karabiner.json" "$HOME/.config/karabiner/karabiner.json"
-# Sketchybar
-create_symlink "$SCRIPT_DIR/sketchybar/sketchybarrc" "$HOME/.config/sketchybar/sketchybarrc"
+# 5. Set up stow for dotfiles
+print_status "Setting up stow for dotfiles..."
+cd "$SCRIPT_DIR"
+
+# Create .stow-local-ignore if it doesn't exist
+if [[ ! -f ".stow-local-ignore" ]]; then
+    cat > .stow-local-ignore << 'EOF'
+# Ignore git repositories and other unnecessary files
+.git/
+.gitignore
+README.md
+install.sh
+setup.sh
+*.md
+.DS_Store
+EOF
+fi
+
+# Stow all configurations
+print_status "Stowing configurations..."
+stow -t "$HOME" zsh
+stow -t "$HOME" tmux
+stow -t "$HOME" git
+stow -t "$HOME" skhd
+stow -t "$HOME" wezterm
+stow -t "$HOME" zellij
+stow -t "$HOME" nushell
+stow -t "$HOME" ssh
+
+# Stow config directories
+mkdir -p "$HOME/.config"
+stow -t "$HOME/.config" kitty
+stow -t "$HOME/.config" nvim
+stow -t "$HOME/.config" starship
+stow -t "$HOME/.config" karabiner
+stow -t "$HOME/.config" sketchybar
+stow -t "$HOME/.config" nix
+stow -t "$HOME/.config" nix-darwin
 
 # 6. Install Neovim plugins
 if command -v nvim &> /dev/null; then
@@ -120,4 +128,5 @@ if command -v nvim &> /dev/null; then
 fi
 
 print_success "Dotfiles installation and dependency setup completed!"
-print_status "Please restart your terminal or run 'source ~/.zshrc' to apply changes." 
+print_status "Please restart your terminal or run 'source ~/.zshrc' to apply changes."
+print_status "Kitty terminal configuration has been stowed to ~/.config/kitty/" 
